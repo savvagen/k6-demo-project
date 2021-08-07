@@ -21,10 +21,8 @@ export let options = {
 
 
 export default function () {
-    let res = http.get('http://localhost:3000/todos');
+    let res = http.get('http://0.0.0.0:3000/todos');
     check(res, { 'status is 200-OK': ()=> res.status === 200})
     sleep(1);
     failures.add(res.status !== 400)
 }
-
-
