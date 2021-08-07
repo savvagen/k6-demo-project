@@ -6,12 +6,12 @@ const failures  = new Rate('no 400 errors')
 
 
 export let options = {
-    //vus: 2,
-    //duration: '10s',
-    stages: [
-        {duration: '1m', target: 5},
-        {duration: '2m', target: 10}
-    ],
+    vus: 5,
+    duration: '120s',
+    // stages: [
+    //     {duration: '1m', target: 5},
+    //     {duration: '2m', target: 10}
+    // ],
 
     thresholds: {
         failed_requests: ['rate<=0'],
