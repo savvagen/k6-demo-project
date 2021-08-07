@@ -1,4 +1,4 @@
-name: "Load Testing Workflow"
+name: Load Test
 on: [push, workflow_dispatch]
 
 jobs:
