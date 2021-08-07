@@ -21,7 +21,7 @@ export let options = {
 
 
 export default function () {
-    let res = http.get('http://json-server:3000/todos');
+    let res = http.get('http://127.0.0.1:3000/todos');
     check(res, { 'status is 200-OK': ()=> res.status === 200})
     sleep(1);
     failures.add(res.status !== 400)
