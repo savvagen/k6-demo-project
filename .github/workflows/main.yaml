@@ -13,12 +13,17 @@ jobs:
       run: docker-compose -f "apps/docker-compose.yml" up -d --build
 
     - name: Watch containers
-      run: docker ps
+      run: |
+        docker ps
+        docker network ls
      
     - name: Run k6 test
-      uses: k6io/action@v0.1
-      with:
-        filename: test/load.js
+      run: docker run --network=performance -i loadimpact/k6 run - <test/load.js 
+    
+    # - name: Run k6 test
+    #   uses: k6io/action@v0.1
+    #   with:
+    #     filename: test/load.js
 
     - name: Stop Application
       if: always()
