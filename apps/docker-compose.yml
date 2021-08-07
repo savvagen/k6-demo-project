@@ -4,6 +4,9 @@ services:
     image: my/json-server:latest
     hostname: json-server
     container_name: json-server
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     networks:
@@ -16,11 +19,6 @@ services:
         reservations:
           cpus: '0.5'
           memory: 150M
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 15s
 
 networks:
   performance:
