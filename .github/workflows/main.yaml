@@ -5,21 +5,21 @@ jobs:
   k6_load_test:
     name: k6 Load Test
     runs-on: ubuntu-latest
-    steps:
-    
+    steps:    
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Start app
+    - name: Start Application
       run: docker-compose -f "apps/docker-compose.yml" up -d --build
-       
+
+    - name: Watch containers
+      run: docker ps
+     
     - name: Run k6 test
       uses: k6io/action@v0.1
       with:
         filename: test/load.js
 
-    - name: Stop containers
+    - name: Stop Application
       if: always()
       run: docker-compose -f "apps/docker-compose.yml" down
-
-
