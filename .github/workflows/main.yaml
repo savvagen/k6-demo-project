@@ -18,13 +18,14 @@ jobs:
         docker network ls
      
     - name: Run k6 test
-      run: docker run --network=host -i loadimpact/k6 run - <test/first.test.js
+      run: docker run --network=host -i loadimpact/k6 run - <test/scenario.test.js
+      #run: docker run --network=host -i loadimpact/k6 run - <test/load.test.js
       #run: docker run --network=host -e "K6_OUT=influxdb=http://30c3909959ac.ngrok.io" -i loadimpact/k6 run - <test/first.test.js
     
     # - name: Run k6 test
     #   uses: k6io/action@v0.1
     #   with:
-    #     filename: test/load.js
+    #     filename: test/first.test.js
     #     flags: --out influxdb=http://30c3909959ac.ngrok.io
 
     - name: Stop Application

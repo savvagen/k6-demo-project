@@ -3,7 +3,9 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-    load: './test/load.test.js',
+    load: './test/load.faker.test.js',
+    scenario: './test/scenario.test.js',
+
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

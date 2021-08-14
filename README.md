@@ -20,3 +20,12 @@ Or use this libs to expose your local services to internet using secure channel:
 * Or use `localtunnel` lib: 
 1) `npm install -g localtunnel`
 2) `lt --port 8081 --subdomain "your desired domain name"`
+
+
+#### HTTP requests debugging:
+```
+k6 run test/load.test.js --http-debug 
+or
+k6 run test/load.test.js --http-debug="full"
+
+```
