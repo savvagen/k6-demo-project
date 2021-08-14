@@ -37,17 +37,25 @@ export let options = {
     }
 }
 
-const myThresholdMetric = new Counter("my_threshold_metric");
+
+// Set Callback for request to mark 404 responses - as passed.
+// https://k6.io/docs/javascript-api/k6-http/setresponsecallback-callback/
+var only200And404Callback = http.expectedStatuses({min: 200, max: 404}) 
 
 
 export default function () {
-    let todo_payload = {
+    // http.setResponseCallback(http.expectedStatuses({min: 200, max: 404}));
+    // from here on for this VU only the status code in between 200 - 404 will be successful so on the next iteration of
+
+
+    let todo_payload = JSON.stringify({
         userId: Math.floor(Math.random()*1+50),
         title: `Task ${Math.floor(Math.random()*1+50)}`,
         completed: true
-    }
-    let res = http.post(`http://127.0.0.1:3001/todo${randomItem(["s", "SSS"])}`, JSON.stringify(todo_payload));
+    })
+    let res = http.post(`http://127.0.0.1:3001/todo${randomItem(["s", "SSS"])}`, todo_payload, {responseCallback: only200And404Callback});
     check(res, { 'status is 201-Created': ()=> res.status === 201})
+    check(res, { 'status in 201-404': ()=> res.status >= 201 && res.status <= 404})
 
     let contentOK = res.json().hasOwnProperty('id') // should return: true
 
