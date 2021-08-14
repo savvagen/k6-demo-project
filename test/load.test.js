@@ -5,9 +5,9 @@ import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from
 
 export let options = {
     vus: 5,
-    duration: '40s',
+    duration: '30s',
     thresholds: {
-        failed_requests: ['rate<=0'],
+        http_req_failed: ['rate<=0'],
         http_req_duration: ['p(95)<500']
     }
 }
@@ -25,29 +25,39 @@ let params = {
     }
 }
 
-export default function(){
+
+export function setup(){
+    // 1. Set Up User
+    console.log("Setup Test!")
+    let user = {
+        name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
+        username: `test.user${randomIntBetween(1000,9999)}`,
+        email: `test.user.${randomString(10)}@example.com`,
+    }
+    let user_resp = http.post(`${BASE_URL}/users`, JSON.stringify(user), params)
+    check(user_resp, {
+        'is status 201': (r) => r.status === 201,
+        'is api id present': (r) => r.json().hasOwnProperty('id'),
+    })
+    sleep(PAUSE)
+    return { data: { 
+        userId: user_resp.json()['id'],
+        email: user.email,
+    }}
+}
+
+
+export default function(data){
 
     group('posts writer scenario', (_)=> {
-        // 1. Create User
-
-        let user_payload = JSON.stringify({
-            name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
-            username: `test.user${randomIntBetween(1000,9999)}`,
-            email: `test.user.${randomString(10)}@example.com`
-        })
-        let user_resp = http.post(`${BASE_URL}/users`, user_payload, params)
-        check(user_resp, {
-            'is status 201': (r) => r.status === 201,
-            'is api id present': (r) => r.json().hasOwnProperty('id'),
-        })
-        //console.log(`${user_resp.status}: ${user_resp.status_text} ${JSON.stringify(user_resp.json())}`)
-        sleep(PAUSE)
+        //console.log(JSON.stringify(data))
+        //console.log(data.data.userId);
 
         // 2. Create ToDo for created user
         
         params.tags.name = 'todo'
         let todo_payload = JSON.stringify({
-            userId: user_resp.json()['id'],
+            userId: data.data.userId,
             title: `ToDo - ${randomIntBetween(1000, 9999)}: ${randomString(20)}`,
             completed: randomItem([true, false])
         })
@@ -66,7 +76,7 @@ export default function(){
             let post_payload = JSON.stringify({
                 title: `New Post ${randomIntBetween(1,1000)}`,
                 body: `Hello World ${randomString(10)}`,
-                userId: user_resp.json()['id']
+                userId: data.data.userId
             })
             let posts_resp = http.post(`${BASE_URL}/posts`, post_payload, params)
             check(posts_resp, {
@@ -82,7 +92,7 @@ export default function(){
                 params.tags.name = 'comment'
                 let comment_payload = JSON.stringify({
                     name: `Comment Test - ${randomIntBetween(1,1000)}`,
-                    email: `${user_resp.json()['email']}`,
+                    email: `${data.data.email}`,
                     body: `Comment-${posts_resp.json()['id']} Comment: ${randomString(20)}`,
                     postId: posts_resp.json()['id']
                 })
@@ -98,3 +108,15 @@ export default function(){
     })
 
 } 
+
+
+export function teardown(data){
+    console.log("Teardown Test!")
+
+    let emailIsOK = /test.user.*@example.com/.test(data.data.email)
+    console.log(emailIsOK)
+    if (!emailIsOK) {
+        throw new Error('incorrect data -> email: ' + data.data.email);
+    }
+    console.log(JSON.stringify(data))
+}

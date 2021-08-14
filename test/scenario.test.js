@@ -27,6 +27,11 @@ const PAUSE = 0.5;
 const BASE_URL = "http://localhost:3001"
 
 
+export function setup(){
+    console.log("Setup Block!")
+}
+
+
 // export function readScn() { readScenario() }
 
 // export function writeScn() { writeScenario() } 
@@ -131,3 +136,8 @@ export function writeScn(){
     sleep(randomItem([0.5, 1])); // Sleep in between 0.5 - 1 sec.
 
 } 
+
+export function teardown(data){
+    console.log("Teardown Block!")
+    JSON.stringify(data)
+}
