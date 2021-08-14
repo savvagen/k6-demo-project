@@ -1,4 +1,4 @@
-import { fake } from 'faker';
+// import { fake } from 'faker';
 import * as faker from 'faker/locale/en_US';
 
 export const generateUser = () => ({

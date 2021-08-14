@@ -13,7 +13,7 @@ export function readScenario(){
         'is status 200': (r) => r.status === 200,
         'list is not empty': (r) => r.json().length > 1,
     })
-    sleep(0.5)
+    sleep(PAUSE)
     
     // Get user from todo
     let userId = totdoResp.json()[randomIntBetween(10, 50)].userId
@@ -30,7 +30,7 @@ export function readScenario(){
         'is status 200': (r) => r.status === 200,
         'list is not empty': (r) => r.json().length > 1,
     })
-    sleep(0.5)
+    sleep(PAUSE)
 
     // Get post from using 
     let postId = commentsResp.json()[randomIntBetween(10, 50)].postId

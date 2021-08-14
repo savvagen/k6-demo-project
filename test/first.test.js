@@ -1,5 +1,5 @@
 import http from 'k6/http'
-import {sleep, check} from 'k6'
+import {sleep, check, group} from 'k6'
 import {Rate} from 'k6/metrics'
 
 const failures  = new Rate('no 400 errors')
@@ -21,6 +21,12 @@ export let options = {
 
 
 export default function () {
+    let todo_payload = JSON.stringify({
+        userId: Math.floor(Math.random()*1+50),
+        title: `Task ${Math.floor(Math.random()*1+50)}`,
+        completed: true
+    })
+
     let res = http.get('http://127.0.0.1:3001/todos');
     check(res, { 'status is 200-OK': ()=> res.status === 200})
     sleep(1);
