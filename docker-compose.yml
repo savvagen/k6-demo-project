@@ -4,6 +4,10 @@ networks:
   k6:
   grafana:
 
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
 services:
   influxdb:
     image: influxdb:1.8
@@ -26,6 +30,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
     volumes:
+      - grafana_data:/var/lib/grafana
       - ./metrics/grafana:/etc/grafana/provisioning/
 
   k6:
@@ -40,11 +45,10 @@ services:
     volumes:
       - ./:/test
     working_dir: "/test"
-    entrypoint: ["k6", "run",  "test/load.test.js", "-e", "BASE_URL=http://json-server:3000"]
+    entrypoint: ["k6", "run",  "test/load.test.js", "-e", "BASE_URL=http://json-server:3000", "--address", "0.0.0.0:6565"]
 
   json-server:
     image: my/json-server:latest
-    hostname: json-server
     container_name: json-server
     build:
       context: .
@@ -61,3 +65,36 @@ services:
         reservations:
           cpus: '0.5'
           memory: 150M
+  
+  # Gathering metrics with prometheus and k6_exporter
+
+  prometheus:
+    image: prom/prometheus:v2.22.0
+    container_name: prometheus
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+    volumes:
+      - prometheus_data:/prometheus
+      - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - 9090:9090
+    networks: 
+      - k6
+      - grafana
+
+  k6_exporter:
+    image: ghcr.io/benc-uk/k6-prometheus-exporter:latest
+    container_name: k6_exporter
+    ports: 
+      - "2112:2112"
+    networks: 
+      - k6
+    environment: 
+      - K6_API_ENDPOINT=http://k6:6565/v1
+      # - METRICS_PORT=2112
+
