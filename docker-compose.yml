@@ -28,18 +28,19 @@ services:
     volumes:
       - ./metrics/grafana:/etc/grafana/provisioning/
 
-  # k6:
-  #   image: loadimpact/k6:latest
-  #   networks:
-  #     - k6
-  #   ports:
-  #     - "6565:6565"
-  #   environment:
-  #     - K6_OUT=influxdb=http://influxdb:8086/k6
-  #   volumes:
-  #     - ./test:/scripts
-  #   command: 
-  #     - 'run ./test/load.js'
+  k6:
+    image: loadimpact/k6:latest
+    container_name: k6
+    networks:
+      - k6
+    ports:
+      - "6565:6565"
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+    volumes:
+      - ./:/test
+    working_dir: "/test"
+    entrypoint: ["k6", "run",  "test/load.test.js", "-e", "BASE_URL=http://json-server:3000"]
 
   json-server:
     image: my/json-server:latest

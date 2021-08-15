@@ -7,8 +7,7 @@
 docker-compose up -d --build
 
 ### Run Load Test
-docker run --net=host -e "K6_OUT=influxdb=http://127.0.0.1:8086/k6" -i loadimpact/k6 run - <test/load.js
-
+docker run --net=host -e "K6_OUT=influxdb=http://127.0.0.1:8086/k6" -i loadimpact/k6 run - <test/load.test.js
 ```
 
 
@@ -22,10 +21,11 @@ Or use this libs to expose your local services to internet using secure channel:
 2) `lt --port 8081 --subdomain "your desired domain name"`
 
 
-#### HTTP requests debugging:
+#### Run with env. variables:
 ```
-k6 run test/load.test.js --http-debug 
-or
-k6 run test/load.test.js --http-debug="full"
+k6 run test/load.test.js -e BASE_URL=http://localhost:3001
 
+### After setting the BASE_URL env., it will be accesible in the code as: __ENV.BASE_URL
+#### Example: "const BASE_URL = __ENV.BASE_URL"
 ```
+
