@@ -40,6 +40,7 @@ export function setup(){
         'is api id present': (r) => r.json().hasOwnProperty('id'),
     })
     sleep(PAUSE)
+    // Return the data as JSON
     return { data: { 
         userId: user_resp.json()['id'],
         email: user.email,
@@ -117,6 +118,7 @@ export function teardown(data){
     console.log(emailIsOK)
     if (!emailIsOK) {
         throw new Error('incorrect data -> email: ' + data.data.email);
+    } else { 
+        console.log(JSON.stringify(data))
     }
-    console.log(JSON.stringify(data))
 }

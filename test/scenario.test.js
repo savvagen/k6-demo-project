@@ -139,5 +139,4 @@ export function writeScn(){
 
 export function teardown(data){
     console.log("Teardown Block!")
-    JSON.stringify(data)
 }
