@@ -48,7 +48,7 @@ services:
     entrypoint: ["k6", "run",  "test/load.test.js", "-e", "BASE_URL=http://json-server:3000", "--address", "0.0.0.0:6565"]
 
   json-server:
-    image: my/json-server:latest
+    image: savvagenchevskiy/json-server:latest
     container_name: json-server
     build:
       context: .
@@ -79,7 +79,6 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=30d'
     volumes:
-      - prometheus_data:/prometheus
       - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - 9090:9090
@@ -88,13 +87,16 @@ services:
       - grafana
 
   k6_exporter:
-    image: ghcr.io/benc-uk/k6-prometheus-exporter:latest
+    image: savvagenchevskiy/k6-exporter:latest
     container_name: k6_exporter
-    ports: 
-      - "2112:2112"
     networks: 
       - k6
-    environment: 
-      - K6_API_ENDPOINT=http://k6:6565/v1
-      # - METRICS_PORT=2112
-
+    #network_mode: host
+    ports:
+      - 9091:9091
+    environment:
+      - METRICS_PORT=9091
+      - COLLECT_INTERVAL=10
+      - K6_SERVER=http://k6:6565
+    depends_on: 
+      - k6

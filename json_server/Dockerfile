@@ -1,7 +1,7 @@
 FROM node:10
 
-COPY db.json /tmp/json_server/db.json
-COPY index.js /tmp/json_server/index.js
+COPY json_server/db.json /tmp/json_server/db.json
+COPY json_server/index.js /tmp/json_server/index.js
 
 RUN npm install -g json-server
 

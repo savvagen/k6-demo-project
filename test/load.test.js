@@ -3,8 +3,9 @@ import {sleep, check, group} from 'k6'
 import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from "https://jslib.k6.io/k6-utils/1.1.0/index.js";
 
 export let options = {
-    vus: 5,
-    duration: '1m30s',
+    vus: 3,
+    duration: '60m',
+    //duration: '1m30s',
     thresholds: {
         http_req_failed: ['rate<=0'],
         http_req_duration: ['p(95)<500']
