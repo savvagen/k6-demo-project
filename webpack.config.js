@@ -5,7 +5,7 @@ module.exports = {
   entry: {
     load: './test/load.faker.test.js',
     scenario: './test/scenario.test.js',
-
+    advanced: './test/advanced.test.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

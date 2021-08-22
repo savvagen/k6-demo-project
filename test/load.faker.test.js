@@ -1,6 +1,6 @@
 import http from 'k6/http'
 import {sleep, check, group} from 'k6'
-import { generateUser, generateToDo } from './modules/genarator';
+import { generateUser, generateToDo } from './utils/genarator';
 import * as faker from 'faker/locale/en_US'
 
 export let options = {

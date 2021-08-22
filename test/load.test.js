@@ -4,7 +4,7 @@ import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from
 
 export let options = {
     vus: 3,
-    duration: '60m',
+    duration: '50s',
     //duration: '1m30s',
     thresholds: {
         http_req_failed: ['rate<=0'],
