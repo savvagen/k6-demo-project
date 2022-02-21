@@ -1,6 +1,0 @@
-init_config:
-instances:
-  - host: k6
-  tags:
-    - instance-type:k6
-    - host:k6
