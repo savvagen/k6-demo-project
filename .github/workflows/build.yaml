@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: loadimpact/k6:latest
-      options: --user 0 # root user
+      options: --user 0 # root user OR --user 1001 # ← non-root user
     name: k6
     timeout-minutes: 180
     needs:
@@ -69,7 +69,7 @@ jobs:
           DD_API_KEY: "${{ env.DD_API_KEY }}"
           DD_DOGSTATSD_NON_LOCAL_TRAFFIC: 1
           DD_DOCKER_LABELS_AS_TAGS: '{"my.custom.label.project":"k6","my.custom.label.version":"1.0"}'
-          DD_TAGS: "tool:k6 scenario:${{ env.SCENARIO_NAME }} base_url:${{ env.BASE_URL }}"
+          DD_TAGS: "tool:k6 scenario:${{ env.SCENARIO_NAME }} base_url:${{ env.BASE_URL }} test_run_id:${{ github.run_id }}"
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
           - /proc/:/host/proc/
@@ -120,7 +120,7 @@ jobs:
         uses: actions/upload-artifact@v2
         if: success()
         with:
-          name: artillery-test-report
+          name: k6-summary-report
           path: reports/*
           retention-days: 15
 
