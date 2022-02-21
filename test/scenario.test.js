@@ -17,13 +17,13 @@ export let options = {
             executor: 'constant-vus',
             exec: 'writeScn', // the function this scenario will execute
             vus: 5,
-            duration: '60s'
+            duration: '180s'
         },
         read_scenario: {
             executor: 'constant-vus',
             exec: 'readScn',
             vus: 5,
-            duration: '60s'
+            duration: '180s'
         }
     }
 }
