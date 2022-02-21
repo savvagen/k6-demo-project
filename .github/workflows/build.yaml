@@ -95,10 +95,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Make reports directory
-        run: |
-          mkdir -p reports
-          pwd
-          ls -la
+        run: mkdir -p reports
 
       - name: Run K6 Test Manually 🧪️
         if: github.event_name == 'workflow_dispatch'
@@ -106,12 +103,12 @@ jobs:
           echo "STATSD_SERVER_ADDRESS=${{ github.event.inputs.statsdServerAddress }}" >> $GITHUB_ENV
           echo "STATSD_SERVER_PORT=${{ github.event.inputs.statsdServerPort }}" >> $GITHUB_ENV
           echo "K6_STATSD_ADDR=${{ github.event.inputs.statsdServerAddress }}:${{ github.event.inputs.statsdServerPort }}" >> $GITHUB_ENV
-          k6 run ./test/${{ github.event.inputs.scenarioName }}.test.js --out statsd
+          k6 run test/${{ github.event.inputs.scenarioName }}.test.js --out statsd
         continue-on-error: true
 
       - name: Run K6 Test 🧪️
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }} # ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.head_ref == 'master' ) }}
-        run: k6 run ./tests/${{ env.SCENARIO_NAME }}.test.js --out statsd
+        run: k6 run test/${{ env.SCENARIO_NAME }}.test.js --out statsd
         continue-on-error: true
 
       - name: Archive test report
