@@ -8,7 +8,7 @@ export function readScenario(data){
     const BASE_URL = data.base_url
 
     // Get todos
-    let totdoResp = http.get(`${BASE_URL}/todos`, {tags: {name: "get_todos"}})
+    let totdoResp = http.get(`${BASE_URL}/todos`, {tags: {name: "GET /todos"}})
     check(totdoResp, {
         'is status 200': (r) => r.status === 200,
         'list is not empty': (r) => r.json().length > 1,
@@ -17,7 +17,7 @@ export function readScenario(data){
     
     // Get user from todo
     let userId = totdoResp.json()[randomIntBetween(10, 50)].user
-    let userResp = http.get(`${BASE_URL}/users/${userId}`, {tags: {name: "get_user"}})
+    let userResp = http.get(`${BASE_URL}/users/${userId}`, {tags: {name: "GET /user/ID"}})
     check(userResp, {
         'is status 200': (r) => r.status === 200,
         'is api id present': (r) => r.json().hasOwnProperty('id'),
@@ -25,7 +25,7 @@ export function readScenario(data){
     sleep(PAUSE)
 
     // Get comments
-    let commentsResp = http.get(`${BASE_URL}/comments`, {tags: {name: "get_comments"}})
+    let commentsResp = http.get(`${BASE_URL}/comments`, {tags: {name: "GET /comments"}})
     check(commentsResp, {
         'is status 200': (r) => r.status === 200,
         'list is not empty': (r) => r.json().length > 1,
@@ -34,7 +34,7 @@ export function readScenario(data){
 
     // Get post from using 
     let postId = commentsResp.json()[randomIntBetween(10, 50)].post
-    let postResp = http.get(`${BASE_URL}/posts/${postId}`, {tags: {name: "get_post"}})
+    let postResp = http.get(`${BASE_URL}/posts/${postId}`, {tags: {name: "GET /post/ID"}})
     check(postResp, {
         'is status 200': (r) => r.status === 200,
         'is api id present': (r) => r.json().hasOwnProperty('id'),

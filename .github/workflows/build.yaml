@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       scenarioName:
-        default: 'scenario'
+        default: 'load'
         required: true
         description: 'Scenario name'
       baseUrl:
@@ -31,7 +31,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     env:
-      SCENARIO_NAME: 'scenario'
+      SCENARIO_NAME: 'load'
       BASE_URL: "http://json_server:3000"
     outputs:
       scenarioName: ${{ steps.setup_step.outputs.scenarioName }}
@@ -98,6 +98,7 @@ jobs:
         run: |
           mkdir -p reports
           pwd
+          ls -la
 
       - name: Run K6 Test Manually 🧪️
         if: github.event_name == 'workflow_dispatch'
@@ -105,12 +106,12 @@ jobs:
           echo "STATSD_SERVER_ADDRESS=${{ github.event.inputs.statsdServerAddress }}" >> $GITHUB_ENV
           echo "STATSD_SERVER_PORT=${{ github.event.inputs.statsdServerPort }}" >> $GITHUB_ENV
           echo "K6_STATSD_ADDR=${{ github.event.inputs.statsdServerAddress }}:${{ github.event.inputs.statsdServerPort }}" >> $GITHUB_ENV
-          k6 run test/${{ github.event.inputs.scenarioName }}.test.js --out statsd
+          k6 run ./test/${{ github.event.inputs.scenarioName }}.test.js --out statsd
         continue-on-error: true
 
       - name: Run K6 Test 🧪️
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }} # ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.head_ref == 'master' ) }}
-        run: k6 run tests/${{ env.SCENARIO_NAME }}.test.js --out statsd
+        run: k6 run ./tests/${{ env.SCENARIO_NAME }}.test.js --out statsd
         continue-on-error: true
 
       - name: Archive test report

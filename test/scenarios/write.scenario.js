@@ -16,7 +16,7 @@ export function writeScenario(data){
             'Accept': 'application/json'
         },
         tags: {
-            name: 'write_user', // first request
+            name: 'GET /get_token', // first request
         }
     }
 
@@ -29,6 +29,7 @@ export function writeScenario(data){
     const token = token_json.json()['token']
 
     // Create user
+    params.tags.name = "POST /users"
     params.headers.Authorization = "Bearer " + token
     let user_payload = JSON.stringify({
         name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
@@ -43,7 +44,7 @@ export function writeScenario(data){
     sleep(PAUSE)
     
     // Create todo
-    params.tags.name = 'write_todo'
+    params.tags.name = "POST /todos"
     let todo_payload = JSON.stringify({
         userId: user_resp.json()['id'],
         title: `ToDo - ${randomIntBetween(1000, 9999)}: ${randomString(20)}`,
@@ -57,7 +58,7 @@ export function writeScenario(data){
     sleep(PAUSE);
 
     // Create Post
-    params.tags.name = 'write_post'
+    params.tags.name = "POST /posts"
     let post_payload = JSON.stringify({
         title: `New Post ${randomIntBetween(1,1000)}`,
         body: `Hello World ${randomString(10)}`,
@@ -71,7 +72,7 @@ export function writeScenario(data){
     sleep(randomIntBetween(1,2)); // Sleep in between 1 - 3 sec.
 
     // Create comment
-    params.tags.name = 'write_comment'
+    params.tags.name = "POST /comments"
     let comment_payload = JSON.stringify({
         name: `Comment Test - ${randomIntBetween(1,1000)}`,
         email: `${user_resp.json()['email']}`,
