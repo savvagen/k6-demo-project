@@ -94,6 +94,11 @@ jobs:
       - name: Checkout repository 🛎️
         uses: actions/checkout@v2
 
+      - name: Install Deps 🔧
+        run: |
+          apk add git yarn
+          yarn install
+
       - name: Make reports directory
         run: mkdir -p reports
 
