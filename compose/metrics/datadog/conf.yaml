@@ -1,6 +1,6 @@
 init_config:
 instances:
-  - host: artillery
+  - host: k6
   tags:
-    - instance-type:artillery
-    - host:artillery
+    - instance-type:k6
+    - host:k6
