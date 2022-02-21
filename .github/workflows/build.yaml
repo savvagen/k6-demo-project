@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       scenarioName:
-        default: 'load'
+        default: 'scenario'
         required: true
         description: 'Scenario name'
       baseUrl:
