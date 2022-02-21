@@ -142,7 +142,7 @@ export function teardown(data){
 
 export function handleSummary(data) {
     return {
-        "result.html": htmlReport(data),
+        "reports/result.html": htmlReport(data),
         stdout: textSummary(data, { indent: " ", enableColors: true }),
     };
 }

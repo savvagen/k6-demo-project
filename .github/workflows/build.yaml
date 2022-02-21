@@ -99,16 +99,13 @@ jobs:
           echo "STATSD_SERVER_ADDRESS=${{ github.event.inputs.statsdServerAddress }}" >> $GITHUB_ENV
           echo "STATSD_SERVER_PORT=${{ github.event.inputs.statsdServerPort }}" >> $GITHUB_ENV
           echo "K6_STATSD_ADDR=${{ github.event.inputs.statsdServerAddress }}:${{ github.event.inputs.statsdServerPort }}" >> $GITHUB_ENV
-          k6 run --out statsd test/${{ github.event.inputs.config }}.test.js
+          k6 run --out statsd test/${{ github.event.inputs.scenarioName }}.test.js
         continue-on-error: true
 
       - name: Run K6 Test 🧪️
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }} # ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.head_ref == 'master' ) }}
-        run: ./node_modules/.bin/artillery run --config src/config/${{ env.CONFIG }}.config.yaml --environment ${{ env.ENVIRONMENT }} src/scenarios/${{ env.SCENARIO_NAME }}.yaml --output reports/report.json
+        run: k6 run --out statsd tests/${{ env.SCENARIO_NAME }}.test.js
         continue-on-error: true
-
-      - name: Generate HTML report
-        run: ./node_modules/.bin/artillery report --output reports/index.html reports/report.json
 
       - name: Archive test report
         uses: actions/upload-artifact@v2
