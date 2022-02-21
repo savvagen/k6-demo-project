@@ -3,15 +3,33 @@ import {sleep, check, group} from 'k6'
 import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from "https://jslib.k6.io/k6-utils/1.1.0/index.js";
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
+import {Rate, Counter, Gauge, Trend} from 'k6/metrics'
+import encoding from 'k6/encoding';
+
+const SuccessCodes = new Counter("status_codes_2xx")
+const ClientErrorCodes = new Counter("status_codes_4xx")
+const ServerErrorCodes = new Counter("status_codes_5xx")
+
+function respStats(res) {
+    SuccessCodes.add(res.status >= 200 && res.status < 300)
+    ClientErrorCodes.add(res.status >= 400 && res.status < 500)
+    ServerErrorCodes.add(res.status >= 500)
+}
+
 
 export let options = {
     vus: 3,
     duration: '50s',
     //duration: '1m30s',
     thresholds: {
-        http_req_failed: ['rate<=0'],
-        http_req_duration: ['p(95)<500']
+        //http_req_failed: ['rate<0.01'], // During the whole test execution, the error rate must be lower than 1%.
+        http_req_failed: [{threshold: 'rate<=0', abortOnFail: true}], // Abort if there is more than 0% failed tests
+        http_req_duration: ['p(95)<500'],
+        // the rate of successful checks should be higher than 90%
+        checks: ['rate>0.9'],
+        'checks{statusCheck:200}': ['rate>0.9'],
     },
+    //maxDuration: '30s',
     // env: { BASE_URL: "http://localhost:3001" },
     // httpDebug: "full" // output the requests and responses with json bodys
 }
@@ -25,21 +43,25 @@ let params = {
         'Accept': 'application/json'
     },
     tags: {
-        name: 'POST /users', // first request
+        name: 'GET /get_token', // first request
     }
 }
 
 
 export function setup(){
-    // 1. Set Up User
     console.log("Setup Test!")
-    let token_json = http.get(`${BASE_URL}/get_token`, { headers: { Authorization: "Basic " + encoding.b64encode("test:test")}})
-    check(token_json, {
+
+    // get token
+    params.headers.Authorization = "Basic " + encoding.b64encode("test:test")
+    let tokenResp = http.get(`${BASE_URL}/get_token`, params)
+    check(tokenResp, {
         'is status 200': (r) => r.status === 200,
         'is token present': (r) => r.json().hasOwnProperty('token'),
     })
-    const token = token_json.json()['token']
+    const token = tokenResp.json()['token']
+    console.log("Got Token: " + token)
 
+    // register user
     params.headers.Authorization = `Bearer ${token}`
     let user = {
         name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
@@ -47,6 +69,7 @@ export function setup(){
         email: `test.user.${randomString(10)}@example.com`,
     }
     let user_resp = http.post(`${BASE_URL}/users`, JSON.stringify(user), params)
+    respStats(user_resp)
     check(user_resp, {
         'is status 201': (r) => r.status === 201,
         'is api id present': (r) => r.json().hasOwnProperty('id'),
@@ -74,6 +97,7 @@ export default function(data){
             completed: randomItem([true, false])
         })
         let todo_resp = http.post(`${BASE_URL}/todos`, todo_payload, params)
+        respStats(todo_resp)
         check(todo_resp, {
             'is status 201': (r) => r.status === 201,
             'is api id present': (r) => r.json().hasOwnProperty('id'),
@@ -91,6 +115,7 @@ export default function(data){
                 userId: data.data.userId
             })
             let posts_resp = http.post(`${BASE_URL}/posts`, post_payload, params)
+            respStats(posts_resp)
             check(posts_resp, {
                 'is status 201': (r) => r.status === 201,
                 'is api id present': (r) => r.json().hasOwnProperty('id'),
@@ -109,6 +134,7 @@ export default function(data){
                     postId: posts_resp.json()['id']
                 })
                 let comment_resp = http.post(`${BASE_URL}/comments`, comment_payload, params)
+                respStats(comment_resp)
                 check(comment_resp, {
                     'is status 201': (r) => r.status === 201,
                     'is api id present': (r) => r.json().hasOwnProperty('id'),

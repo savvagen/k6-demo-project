@@ -21,7 +21,8 @@ export function writeScenario(data){
     }
 
     // Get token
-    let token_json = http.get(`${BASE_URL}/get_token`, { headers: { Authorization: "Basic " + encoding.b64encode("test:test")}})
+    params.headers.Authorization = "Basic " + encoding.b64encode("test:test")
+    let token_json = http.get(`${BASE_URL}/get_token`, params)
     check(token_json, {
         'is status 200': (r) => r.status === 200,
         'is token present': (r) => r.json().hasOwnProperty('token'),
