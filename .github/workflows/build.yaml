@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: loadimpact/k6:latest
-      # options: --user 1001
+      options: --user 1001
     name: k6
     timeout-minutes: 180
     needs:
