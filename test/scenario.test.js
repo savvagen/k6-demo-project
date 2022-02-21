@@ -14,14 +14,14 @@ export let options = {
             // some arbitrary scenario name
             executor: 'constant-vus',
             exec: 'writeScn', // the function this scenario will execute
-            vus: 1,
-            duration: '10s'
+            vus: 5,
+            duration: '60s'
         },
         read_scenario: {
             executor: 'constant-vus',
             exec: 'readScn',
-            vus: 1,
-            duration: '10s'
+            vus: 5,
+            duration: '60s'
         }
     }
 }

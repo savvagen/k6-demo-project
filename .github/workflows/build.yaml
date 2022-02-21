@@ -67,7 +67,7 @@ jobs:
           DD_API_KEY: "${{ env.DD_API_KEY }}"
           DD_DOGSTATSD_NON_LOCAL_TRAFFIC: 1
           DD_DOCKER_LABELS_AS_TAGS: '{"my.custom.label.project":"k6","my.custom.label.version":"1.0"}'
-          DD_TAGS: "tool:k6 mode:${{ env.CONFIG }} scenario:${{ env.SCENARIO_NAME }} env:${{ env.ENVIRONMENT }}"
+          DD_TAGS: "tool:k6 scenario:${{ env.SCENARIO_NAME }} base_url:${{ env.BASE_URL }}"
         volumes:
           - ${{ github.workspace }}/compose/metrics/datadog/conf.yaml:/conf.d/conf.yaml
           - /var/run/docker.sock:/var/run/docker.sock
