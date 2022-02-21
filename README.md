@@ -1,4 +1,6 @@
+# K6 Testing demo
 
+![Build Status](https://github.com/savvagen/k6-demo-project/actions/workflows/build.yaml/badge.svg)
 
 
 ### Run Load Test inf Docker container
