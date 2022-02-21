@@ -90,6 +90,7 @@ jobs:
       STATSD_SERVER_PORT: 8125
       DD_API_KEY: "${{ secrets.DATADOG_API_KEY }}"
       K6_STATSD_ADDR: "datadog:8125"
+      K6_STATSD_ENABLE_TAGS: true
     steps:
       - name: Checkout repository 🛎️
         uses: actions/checkout@v2

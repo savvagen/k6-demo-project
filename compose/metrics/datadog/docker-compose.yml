@@ -12,10 +12,10 @@ services:
       - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=1
       #- DD_DOGSTATSD_PORT=<NEW_DOGSTATSD_PORT>
       - DD_DOCKER_LABELS_AS_TAGS={"my.custom.label.project":"k6","my.custom.label.version":"1.0"}
-      - DD_TAGS="tool:k6 mode:load scenario:system env:local"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /proc/:/host/proc/:ro
-      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - DD_TAGS="tool:k6 scenario:load base_url:${BASE_URL}"
+    #volumes:
+      #- /var/run/docker.sock:/var/run/docker.sock:ro
+      #- /proc/:/host/proc/:ro
+      #- /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
     ports:
       - "8125:8125/udp"

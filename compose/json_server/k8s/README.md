@@ -1,6 +1,7 @@
 # Minikube setup
 
 ```
+minikube addons enable metrics-server
 minikube delete
 minikube start # --extra-config=controller-manager.horizontal-pod-autoscaler-use-rest-clients=false
 minikube dashboard --url ### Show dashboard url

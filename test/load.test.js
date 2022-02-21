@@ -30,8 +30,8 @@ export let options = {
         'checks{statusCheck:200}': ['rate>0.9'],
     },
     //maxDuration: '30s',
-    // env: { BASE_URL: "http://localhost:3001" },
-    // httpDebug: "full" // output the requests and responses with json bodys
+    //env: { BASE_URL: "http://localhost:3001" },
+    //httpDebug: "full" // output the requests and responses with json bodys
 }
 
 const PAUSE = 0.5;
@@ -40,16 +40,19 @@ const BASE_URL = __ENV.BASE_URL !== undefined ? __ENV.BASE_URL: "http://localhos
 let params = {
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
     },
     tags: {
-        name: 'GET /get_token', // first request
+        name: 'POST /get_token', // first request
     }
 }
 
 
+
 export function setup(){
     console.log("Setup Test!")
+
+    // 1. Setup User
 
     // get token
     params.headers.Authorization = "Basic " + encoding.b64encode("test:test")
@@ -63,6 +66,7 @@ export function setup(){
 
     // register user
     params.headers.Authorization = `Bearer ${token}`
+    params.tags.name = 'POST /users'
     let user = {
         name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
         username: `test.user${randomIntBetween(1000,9999)}`,
@@ -88,8 +92,8 @@ export default function(data){
         //console.log(JSON.stringify(data))
         //console.log(data.data.userId);
 
-        // 2. Create ToDo for created user
-        
+        // 2. Create To-do for registered user
+
         params.tags.name = 'POST /todos'
         let todo_payload = JSON.stringify({
             userId: data.data.userId,
@@ -142,7 +146,7 @@ export default function(data){
                 //console.log(`${comment_resp.status}: ${comment_resp.status_text} ${JSON.stringify(comment_resp.json())}`)
                 sleep(randomItem([0.5, 1])); // Sleep in between 0.5 - 1 sec.
             }
-        } 
+        }
     })
 
 } 
