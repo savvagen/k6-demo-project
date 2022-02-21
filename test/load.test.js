@@ -163,7 +163,7 @@ export function teardown(data){
 
 export function handleSummary(data) {
     return {
-        "reports/result.html": htmlReport(data),
+        "reports/index.html": htmlReport(data),
         stdout: textSummary(data, { indent: " ", enableColors: true }),
     };
 }
