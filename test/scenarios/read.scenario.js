@@ -3,9 +3,9 @@ import {sleep, check} from 'k6'
 import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from "https://jslib.k6.io/k6-utils/1.1.0/index.js";
 
 const PAUSE = 0.5;
-const BASE_URL = "http://localhost:3001"
 
-export function readScenario(){
+export function readScenario(data){
+    const BASE_URL = data.base_url
 
     // Get todos
     let totdoResp = http.get(`${BASE_URL}/todos`, {tags: {name: "get_todos"}})
@@ -16,7 +16,7 @@ export function readScenario(){
     sleep(PAUSE)
     
     // Get user from todo
-    let userId = totdoResp.json()[randomIntBetween(10, 50)].userId
+    let userId = totdoResp.json()[randomIntBetween(10, 50)].user
     let userResp = http.get(`${BASE_URL}/users/${userId}`, {tags: {name: "get_user"}})
     check(userResp, {
         'is status 200': (r) => r.status === 200,
@@ -33,7 +33,7 @@ export function readScenario(){
     sleep(PAUSE)
 
     // Get post from using 
-    let postId = commentsResp.json()[randomIntBetween(10, 50)].postId
+    let postId = commentsResp.json()[randomIntBetween(10, 50)].post
     let postResp = http.get(`${BASE_URL}/posts/${postId}`, {tags: {name: "get_post"}})
     check(postResp, {
         'is status 200': (r) => r.status === 200,

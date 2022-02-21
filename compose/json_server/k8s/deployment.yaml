@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: json-server
+  labels:
+    app: json-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: json-server
+  template:
+    metadata:
+      labels:
+        app: json-server
+    spec:
+      containers:
+        - name: json-server
+          image: savvagenchevskiy/json-server:latest
+          ports:
+            - name: http
+              containerPort: 3000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 150m
+              memory: 128Mi

@@ -15,7 +15,7 @@ export let options = {
 }
 
 const PAUSE = 0.5;
-const BASE_URL = __ENV.BASE_URL !== undefined ? __ENV.BASE_URL: "http://localhost:3001"
+const BASE_URL = __ENV.BASE_URL !== undefined ? __ENV.BASE_URL: "http://localhost:3000"
 
 let params = {
     headers: {
@@ -31,6 +31,14 @@ let params = {
 export function setup(){
     // 1. Set Up User
     console.log("Setup Test!")
+    let token_json = http.get(`${BASE_URL}/get_token`, { headers: { Authorization: "Basic " + encoding.b64encode("test:test")}})
+    check(token_json, {
+        'is status 200': (r) => r.status === 200,
+        'is token present': (r) => r.json().hasOwnProperty('token'),
+    })
+    const token = token_json.json()['token']
+
+    params.headers.Authorization = `Bearer ${token}`
     let user = {
         name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
         username: `test.user${randomIntBetween(1000,9999)}`,
@@ -48,7 +56,6 @@ export function setup(){
         email: user.email,
     }}
 }
-
 
 export default function(data){
 

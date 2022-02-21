@@ -4,8 +4,8 @@ services:
     image: savvagenchevskiy/json-server:latest
     hostname: json-server
     container_name: json-server
-    build: 
-      context: .
+    build:
+      context: ""
       dockerfile: Dockerfile
     ports:
       - "3001:3000"

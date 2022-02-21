@@ -1,0 +1,41 @@
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: json-server-ingress
+#spec:
+#  ingressClassName: external-lb
+#  defaultBackend:
+#    service:
+#      name: json-server
+#      port:
+#        number: 300
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: json-server-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: external-lb
+  rules:
+    - host: "localhost"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: json-server
+                port:
+                  number: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: external-lb
+spec:
+  controller: example.com/ingress-controller
+  parameters:
+    apiGroup: k8s.example.com
+    kind: IngressParameters
+    name: external-lb

@@ -1,13 +1,15 @@
 import http from 'k6/http'
 import {sleep, check} from 'k6'
 import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from "https://jslib.k6.io/k6-utils/1.1.0/index.js";
+import encoding from 'k6/encoding';
 
 const PAUSE = 0.5;
-const BASE_URL = "http://localhost:3001"
 
-export function writeScenario(){
+export function writeScenario(data){
 
+    //console.log(JSON.stringify(data))
 
+    const BASE_URL = data.base_url
     let params = {
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +20,16 @@ export function writeScenario(){
         }
     }
 
+    // Get token
+    let token_json = http.get(`${BASE_URL}/get_token`, { headers: { Authorization: "Basic " + encoding.b64encode("test:test")}})
+    check(token_json, {
+        'is status 200': (r) => r.status === 200,
+        'is token present': (r) => r.json().hasOwnProperty('token'),
+    })
+    const token = token_json.json()['token']
+
     // Create user
+    params.headers.Authorization = "Bearer " + token
     let user_payload = JSON.stringify({
         name: `Test${randomIntBetween(1000,9999)} User${randomIntBetween(1000,9999)}`,
         username: `test.user${randomIntBetween(1000,9999)}`,

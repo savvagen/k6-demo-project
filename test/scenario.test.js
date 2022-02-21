@@ -1,40 +1,43 @@
 import http from 'k6/http'
 import {sleep, check, group} from 'k6'
 import { randomIntBetween,  randomString, randomItem, uuidv4, findBetween } from "https://jslib.k6.io/k6-utils/1.1.0/index.js";
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
 import { readScenario } from './scenarios/read.scenario.js';
 import { writeScenario } from './scenarios/write.scenario.js';
 
 export let options = {
+    noConnectionReuse: false,
     discardResponseBodies: false,
     scenarios: {
         write_scenario: {
             // some arbitrary scenario name
             executor: 'constant-vus',
             exec: 'writeScn', // the function this scenario will execute
-            vus: 5,
-            duration: '40s'
+            vus: 1,
+            duration: '10s'
         },
         read_scenario: {
             executor: 'constant-vus',
             exec: 'readScn',
-            vus: 5,
-            duration: '40s'
+            vus: 1,
+            duration: '10s'
         }
     }
 }
 
 const PAUSE = 0.5;
-const BASE_URL = "http://localhost:3001"
-
+const BASE_URL = __ENV.BASE_URL !== undefined ? __ENV.BASE_URL: "http://localhost:3000"
 
 export function setup(){
     console.log("Setup Block!")
+    return { base_url: BASE_URL}
 }
 
 
-export function readScn() { readScenario() }
+export function readScn(data) { readScenario(data) }
 
-export function writeScn() { writeScenario() } 
+export function writeScn(data) { writeScenario(data) }
 
 // export function readScn(){
 //     // Get todos
@@ -135,4 +138,11 @@ export function writeScn() { writeScenario() }
 
 export function teardown(data){
     console.log("Teardown Block!")
+}
+
+export function handleSummary(data) {
+    return {
+        "result.html": htmlReport(data),
+        stdout: textSummary(data, { indent: " ", enableColors: true }),
+    };
 }
