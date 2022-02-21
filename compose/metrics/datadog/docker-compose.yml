@@ -15,8 +15,8 @@ services:
       - DD_TAGS="tool:k6 mode:load scenario:system env:local"
     volumes:
       - ./conf.yaml:/conf.d/conf.yaml
-      #- /var/run/docker.sock:/var/run/docker.sock:ro
-      #- /proc/:/host/proc/:ro
-      #- /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
     ports:
       - "8125:8125/udp"
