@@ -17,12 +17,13 @@ export let options = {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [
-                { duration: '20s', target: 5 },
+                { duration: '5s', target: 5 },
                 { duration: '60s', target: 5 },
                 { duration: '20s', target: 10 },
-                { duration: '60s', target: 10 },
+                { duration: '180s', target: 10 },
                 { duration: '10s', target: 0 },
             ],
+            gracefulRampDown: '5s',
         },
         read_scenario: {
             exec: 'readScn',
@@ -32,12 +33,12 @@ export let options = {
             executor: 'ramping-vus',
             startVUs: 0,
             stages: [
-                { duration: '20s', target: 5 },
+                { duration: '5s', target: 5 },
                 { duration: '60s', target: 5 },
-                { duration: '20s', target: 10 },
-                { duration: '60s', target: 10 },
-                { duration: '10s', target: 0 },
+                { duration: '5s', target: 10 },
+                { duration: '180s', target: 10 },
             ],
+            gracefulRampDown: '5s',
         }
     }
 }
