@@ -40,7 +40,7 @@ export let options = {
 
 // Set Callback for request to mark 404 responses - as passed.
 // https://k6.io/docs/javascript-api/k6-http/setresponsecallback-callback/
-var only200And404Callback = http.expectedStatuses({min: 200, max: 404}) 
+let only200And404Callback = http.expectedStatuses({min: 200, max: 404})
 
 
 export default function () {
@@ -49,8 +49,8 @@ export default function () {
 
 
     let todo_payload = JSON.stringify({
-        userId: Math.floor(Math.random()*1+50),
-        title: `Task ${Math.floor(Math.random()*1+50)}`,
+        userId: Math.floor(Math.random()+50),
+        title: `Task ${Math.floor(Math.random()+50)}`,
         completed: true
     })
     let res = http.post(`http://127.0.0.1:3001/todo${randomItem(["s", "SSS"])}`, todo_payload, {responseCallback: only200And404Callback});

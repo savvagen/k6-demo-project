@@ -1,5 +1,5 @@
-// import { fake } from 'faker';
-import * as faker from 'faker/locale/en_US';
+import { faker } from '@faker-js/faker/locale/en_US';
+
 
 export const generateUser = () => ({
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,

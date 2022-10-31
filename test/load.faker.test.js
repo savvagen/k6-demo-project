@@ -1,7 +1,7 @@
 import http from 'k6/http'
 import {sleep, check, group} from 'k6'
 import { generateUser, generateToDo } from './utils/genarator';
-import * as faker from 'faker/locale/en_US'
+import { faker } from '@faker-js/faker/locale/en_US';
 
 export let options = {
     vus: 2,
@@ -40,7 +40,7 @@ export default function(){
         sleep(PAUSE)
 
         // 2. Create ToDo for created user
-        
+
         params.tags.name = 'todo'
         let todo_payload = JSON.stringify(generateToDo(user_resp.json()['id']))
         console.log(todo_payload)
@@ -74,7 +74,7 @@ export default function(){
                 params.tags.name = 'comment'
                 let comment_payload = JSON.stringify({
                     postId: posts_resp.json()['id'],
-                    name: `Test Comment - ${Math.round(Math.random()*1+1000)}`,
+                    name: `Test Comment - ${Math.round(Math.random() + 1000)}`,
                     email: `${user_resp.json()['email']}`,
                     body: `Post-${posts_resp.json()['id']} Comment: ${faker.lorem.words()}`,
                 })
@@ -85,7 +85,7 @@ export default function(){
                 })
                 sleep(PAUSE);
             }
-        } 
+        }
     })
 
-} 
+}
