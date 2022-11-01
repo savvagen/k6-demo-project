@@ -1,36 +1,36 @@
-name: Load Test
-on: [pull_request] #[push, workflow_dispatch]
-
-jobs:
-  k6_load_test:
-    name: k6 Load Test
-    runs-on: ubuntu-latest
-    steps:    
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Start Application
-      # run: docker-compose -f "json_server/docker-compose.yml" up -d --build
-      run: |
-        docker-compose build -- json-server
-        docker-compose -f "json_server/docker-compose.yml" up -d
-
-    - name: Watch containers
-      run: |
-        docker ps
-        docker network ls
-     
-    - name: Run k6 test
-      run: docker run --network=host -i loadimpact/k6 run - <test/load.test.js
-      #run: docker run --network=host -i loadimpact/k6 run - <test/load.test.js
-      #run: docker run --network=host -e "K6_OUT=influxdb=http://30c3909959ac.ngrok.io" -i loadimpact/k6 run - <test/first.test.js
-    
-    # - name: Run k6 test
-    #   uses: k6io/action@v0.1
-    #   with:
-    #     filename: test/first.test.js
-    #     flags: --out influxdb=http://30c3909959ac.ngrok.io
-
-    - name: Stop Application
-      if: always()
-      run: docker-compose -f "json_server/docker-compose.yml" down
+#name: Load Test
+#on: [pull_request] #[push, workflow_dispatch]
+#
+#jobs:
+#  k6_load_test:
+#    name: k6 Load Test
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Checkout
+#      uses: actions/checkout@v2
+#
+#    - name: Start Application
+#      # run: docker-compose -f "json_server/docker-compose.yml" up -d --build
+#      run: |
+#        docker-compose build -- json-server
+#        docker-compose -f "json_server/docker-compose.yml" up -d
+#
+#    - name: Watch containers
+#      run: |
+#        docker ps
+#        docker network ls
+#
+#    - name: Run k6 test
+#      run: docker run --network=host -i loadimpact/k6 run - <test/load.test.js
+#      #run: docker run --network=host -i loadimpact/k6 run - <test/load.test.js
+#      #run: docker run --network=host -e "K6_OUT=influxdb=http://30c3909959ac.ngrok.io" -i loadimpact/k6 run - <test/first.test.js
+#
+#    # - name: Run k6 test
+#    #   uses: k6io/action@v0.1
+#    #   with:
+#    #     filename: test/first.test.js
+#    #     flags: --out influxdb=http://30c3909959ac.ngrok.io
+#
+#    - name: Stop Application
+#      if: always()
+#      run: docker-compose -f "json_server/docker-compose.yml" down
