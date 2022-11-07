@@ -1,10 +1,7 @@
 import http from 'k6/http'
 import {sleep, check, group} from 'k6'
 import {Rate} from 'k6/metrics'
-import {log} from "webpack-cli/lib/utils/logger";
-
 const failures  = new Rate('no 400 errors')
-
 
 export let options = {
     vus: 1,
