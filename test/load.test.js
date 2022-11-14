@@ -18,7 +18,7 @@ function respStats(res) {
 
 
 export let options = {
-    vus: 3,
+    vus: 10,
     duration: '50s',
     //duration: '1m30s',
     thresholds: {
@@ -80,7 +80,7 @@ export function setup(){
     })
     sleep(PAUSE)
     // Return the data as JSON
-    return { data: { 
+    return { data: {
         userId: user_resp.json()['id'],
         email: user.email,
     }}
@@ -149,7 +149,7 @@ export default function(data){
         }
     })
 
-} 
+}
 
 
 export function teardown(data){
@@ -159,7 +159,7 @@ export function teardown(data){
     console.log(emailIsOK)
     if (!emailIsOK) {
         throw new Error('incorrect data -> email: ' + data.data.email);
-    } else { 
+    } else {
         console.log(JSON.stringify(data))
     }
 }
