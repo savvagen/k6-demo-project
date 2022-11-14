@@ -4,7 +4,7 @@ module.exports = {
   mode: 'production',
   entry: {
     first: './test/first.test.js',
-    crypto: './test/crypto.test.js',
+    //crypto: './test/crypto.test.js',
     load: './test/load.faker.test.js',
     scenario: './test/scenario.test.js',
     advanced: './test/advanced.test.js'
